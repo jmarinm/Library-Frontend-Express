@@ -3,6 +3,7 @@ import moment from "moment";
 import * as fs from 'fs';
 import { Book, Borrower, Loan } from "../models";
 import bodyParser from "body-parser";
+import { userInfo } from "os";
 
 const app = express()
 const PORT = 8080
@@ -105,3 +106,103 @@ app.post("/loan/create", (req,res)=>{
 
     res.send("loan created")
 })
+
+//GET ALL
+
+app.get("/book/get", (req,res)=>{
+
+    Book.findAll().then((books)=>{
+        res.send(books)
+    }).catch((err)=>{
+        console.log(err);
+    });
+});
+
+app.get("/borrower/get", (req,res)=>{
+
+    Borrower.findAll().then((borrowers)=>{
+        res.send(borrowers)
+    }).catch((err)=>{
+        console.log(err);
+    });
+});
+
+app.get("/loan/get", (req,res)=>{
+
+    Loan.findAll().then((loans)=>{
+        res.send(loans)
+    }).catch((err)=>{
+        console.log(err);
+    });
+});
+
+//GET ONE
+
+app.get("/book/get/:id", (req,res)=>{
+    Book.findAll( {where: {id: req.params.id }}).then((books)=>{
+        res.send(books)
+    }).catch((err)=>{
+        console.log(err);
+    });
+});
+
+app.get("/borrower/get/:id", (req,res)=>{
+
+    Borrower.findAll({where: {id: req.params.id }}).then((borrowers)=>{
+        res.send(borrowers)
+    }).catch((err)=>{
+        console.log(err);
+    });
+});
+
+app.get("/loan/get/:id", (req,res)=>{
+
+    Loan.findAll({where: {id: req.params.id }}).then((loans)=>{
+        res.send(loans)
+    }).catch((err)=>{
+        console.log(err);
+    });
+});
+
+//DELETE
+
+app.delete("/book/delete/:id",(req,res)=>{
+
+    Book.destroy({where: {id: req.params.id}});
+    res.send("book deleted")  
+});
+
+app.delete("/borrower/delete/:id",(req,res)=>{
+
+    Borrower.destroy({where: {id: req.params.id}});
+    res.send("borrower deleted")  
+});
+
+app.delete("/loan/delete/:id",(req,res)=>{
+
+    Loan.destroy({where: {id: req.params.id}});
+    res.send("loan deleted")  
+});
+
+//UPDATE
+
+app.put("/book/update/:id", (req,res)=>{
+    Book.update(req.body, {where:{id: req.params.id}}
+        ).catch((err)=>
+        console.log(err))
+    res.send("Book updated")
+});
+
+app.put("/borrower/update/:id", (req,res)=>{
+    Borrower.update(req.body, {where:{id: req.params.id}}
+        ).catch((err)=>
+        console.log(err))
+    res.send("Borrower updated")
+});
+
+app.put("/loan/update/:id", (req,res)=>{
+    Loan.update(req.body, {where:{id: req.params.id}}
+        ).catch((err)=>
+        console.log(err))
+    res.send("Loan Updated")
+});
