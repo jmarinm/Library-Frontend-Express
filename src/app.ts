@@ -2,17 +2,21 @@ import express from "express";
 import moment from "moment";
 import * as fs from 'fs';
 
-
 const app = express()
 const PORT = 8080
 const FILE_PATH = "./persons.csv"
+const db = require("../models");
 
-app.listen(8080,() => {
-    console.log(`App is running at http://localhost:${PORT}`)
+db.sequelize.sync().then((req)=>{
+    app.listen(8080,() => {
+        console.log(`App is running at http://localhost:${PORT}`)
+    })
 })
-
+    
 app.use(express.json())
 
+
+//Fase 1
 app.get('/localtime', (req,res)=> {
     res.status(200).send({
         time: moment().format('LTS')
@@ -34,5 +38,7 @@ app.post('/person', (req, res)=> {
         "person": `${info.name} ${info.surname} registered`,
     })
 })
+
+//Fase 2
 
 
