@@ -1,21 +1,21 @@
 import express from "express";
 import moment from "moment";
 import * as fs from 'fs';
-import { Book, Borrower, Loan } from "../models";
 import BookController from "../controllers/BookController";
 import LoanController from "../controllers/LoanController";
 import BorrowerController from "../controllers/BorrowerController";
-
+import "dotenv/config";
 import bodyParser from "body-parser";
-import { userInfo } from "os";
+
 
 const app = express()
-const PORT = 8080
+const PORT = process.env.PORT
 const FILE_PATH = "./persons.csv"
 const db = require("../models");
 
+
 db.sequelize.sync().then((req)=>{
-    app.listen(8080,() => {
+    app.listen(PORT,() => {
         console.log(`App is running at http://localhost:${PORT}`)
     })
 })   
