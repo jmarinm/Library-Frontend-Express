@@ -1,5 +1,7 @@
 import { Router, Request, Response } from "express";
 import { Book } from "../models";
+import * as cp from 'child_process';
+
 class BookController {
     public path = '/book';
     public router = Router();
@@ -15,6 +17,8 @@ class BookController {
         this.router.post(this.path+'/create', this.createBook);
         this.router.put(this.path+'/update/:id', this.updateBookById);
         this.router.delete(this.path+'/delete/:id', this.deleteBookById);
+        this.router.get(this.path+"/report", this.getBooksReport);
+        this.router.get(this.path+"/report/:word", this.getBooksByWord);
     }
 
     private getAllBooks = (req: Request, res: Response) => {
@@ -60,6 +64,27 @@ class BookController {
     private deleteBookById = (req: Request, res: Response) => {
         Book.destroy({where: {id: req.params.id}});
         res.send("book deleted") 
+    }
+
+    private getBooksReport = (req: Request, res: Response) =>{
+        const childProcess = cp.spawn('python3',['./scripts/BooksReport.py'])
+        childProcess.stdout.on('data', (data)=>{
+            res.send(`Report saved at: ${data}`)
+        });
+        childProcess.stderr.on('data', (data)=>{
+            console.log(`stderr: ${data}`)
+        });
+    }
+
+    private getBooksByWord= (req:Request, res: Response)=>{
+
+        const childProcess = cp.spawn('python3',['./scripts/BooksReport.py',req.params.word])
+        childProcess.stdout.on('data', (data)=>{
+            res.send(`Report saved at: ${data}`)
+        });
+        childProcess.stderr.on('data', (data)=>{
+            console.log(`stderr: ${data}`)
+        });
     }
 }
 

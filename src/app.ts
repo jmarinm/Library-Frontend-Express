@@ -46,6 +46,7 @@ app.post('/person', (req, res)=> {
     })
 })
 
+
 //Fase 2
 
 //Controllers
@@ -56,4 +57,5 @@ const borrCont = new BorrowerController();
 //Routers
 app.use('/',bookCont.router);
 app.use('/',loanCont.router);
+
 app.use('/',borrCont.router);
