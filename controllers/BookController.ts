@@ -19,6 +19,7 @@ class BookController {
         this.router.delete(this.path+'/delete/:id', this.deleteBookById);
         this.router.get(this.path+"/report", this.getBooksReport);
         this.router.get(this.path+"/report/:word", this.getBooksByWord);
+        this.router.get(this.path+"/report/download/:route", this.downloadReport);
     }
 
     private getAllBooks = (req: Request, res: Response) => {
@@ -31,7 +32,8 @@ class BookController {
 
     private getBookById = (req: Request, res: Response) => {
         Book.findAll( {where: {id: req.params.id }}).then((books)=>{
-            res.send(books)
+            res.set('Access-Control-Allow-Origin', '*');
+            res.send({'objects': books})
         }).catch((err)=>{
             console.log(err);
         });
@@ -80,11 +82,16 @@ class BookController {
 
         const childProcess = cp.spawn('python3',['./scripts/BooksReport.py',req.params.word])
         childProcess.stdout.on('data', (data)=>{
-            res.send(`Report saved at: ${data}`)
+            res.send(`${data}`)
         });
         childProcess.stderr.on('data', (data)=>{
             console.log(`stderr: ${data}`)
         });
+    }
+
+    private downloadReport = (req:Request, res: Response)=>{
+        const route = req.params.route
+        res.download('./reports/'+route)
     }
 }
 

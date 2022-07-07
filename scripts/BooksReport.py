@@ -39,9 +39,11 @@ def queryBooksByWord(word):
 def dfToExcel(dataFrame,mode):
     
     reportType = "" if mode == 1 else "word"
-    reports_dir = os.path.dirname(os.path.realpath(__file__))+"/../reports/"+reportType+"report"+str(time.time())+".xlsx"
+    filename = reportType+"report"+str(time.time())+".xlsx"
+    reports_dir = os.path.dirname(os.path.realpath(__file__))+"/../reports/"+filename
+    reports_dir_to_print = './reports/'+filename
     dataFrame.to_excel(reports_dir)
-    print(reports_dir)
+    print(filename)
 
 def main():
 
